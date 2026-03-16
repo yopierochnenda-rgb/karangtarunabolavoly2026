@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KARANGTARUNA LEMBUH WULUNG RT CUP 2026  - UPDATE SKOR</title>
+  <style>
+    :root { --red: #fe2c55; --bg: #0a0a0a; --card: #161616; --gold: #f1c40f; }
+    body { background: var(--bg); color: white; font-family: 'Segoe UI', Roboto, sans-serif; padding: 15px; margin: 0; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--red); padding-bottom: 10px; margin-bottom: 20px; }
+    .gir { font-size: 24px; cursor: pointer; opacity: 0.6; transition: 0.3s; }
+    .gir:hover { opacity: 1; transform: rotate(90deg); }
+    
+    /* Panel Admin */
+    #admin-panel { display: none; background: #222; padding: 15px; border-radius: 10px; border: 1px solid var(--red); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(254, 44, 85, 0.2); }
+    select, input { width: 100%; padding: 12px; margin: 8px 0; background: #333; color: white; border: 1px solid #444; border-radius: 5px; box-sizing: border-box; }
+    .btn-save { width: 100%; padding: 15px; background: var(--red); color: white; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.2s; }
+    .btn-save:active { transform: scale(0.98); background: #d62548; }
+
+    .section-title { color: var(--gold); border-left: 4px solid var(--red); padding-left: 10px; margin: 25px 0 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+    
+    /* Card Jadwal */
+    .match-card { background: var(--card); margin-bottom: 10px; padding: 12px; border-radius: 10px; border-left: 4px solid var(--red); box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+    .match-info { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-bottom: 8px; }
+    .match-teams { display: flex; justify-content: space-between; align-items: center; text-align: center; }
+    .team-name { flex: 1; font-weight: bold; font-size: 14px; text-transform: uppercase; }
+    .score-box { flex: 0.5; background: #222; padding: 5px; border-radius: 5px; margin: 0 10px; color: var(--red); font-weight: 900; font-size: 18px; border: 1px solid #333; }
+
+    /* Card Klasemen */
+    .card { background: var(--card); padding: 12px; margin-bottom: 8px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+    .pts-box { text-align: center; background: rgba(254, 44, 85, 0.1); padding: 8px; border-radius: 8px; min-width: 45px; border: 1px solid var(--red); }
+    .pts-val { display: block; font-size: 18px; font-weight: bold; color: var(--red); }
+    .grup-label { color: var(--gold); font-weight: bold; margin: 20px 0 10px; border-bottom: 1px solid #333; padding-bottom: 5px; display: block; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h2 style="margin:0">🏆 RT CUP 2026</h2>
+    <div class="gir" onclick="toggleAdmin()">⚙️</div>
+  </div>
+
+  <div id="admin-panel">
+    <h4 style="margin:0 0 10px 0; color:var(--red); text-align:center;">⚙️ INPUT SKOR PERTANDINGAN</h4>
+    <label style="font-size:11px; color:#888;">PILIH PARTAI:</label>
+    <select id="selJadwal">
+        <option value="">-- Memuat Jadwal... --</option>
+    </select>
+    <div style="display:flex; gap:10px;">
+        <input type="number" id="s1" placeholder="Skor Kiri">
+        <input type="number" id="s2" placeholder="Skor Kanan">
+    </div>
+    <button class="btn-save" onclick="simpanSkor()">UPDATE SKOR SEKARANG</button>
+  </div>
+
+  <div class="section-title">📅 Jadwal Pertandingan</div>
+  <div id="jadwal-area">Memuat data dari Google Sheets...</div>
+
+  <div class="section-title">📊 Klasemen Sementara</div>
+  <div id="klasemen-area">Menghitung Klasemen...</div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw5LvIh68OtxWDfMdKJFd7U2k69ordkgYi5_oiX54P7OVw3UlytYSh6JpDWVApjn-Fw/exec';
+
+    function toggleAdmin() {
+      var x = document.getElementById("admin-panel");
+      x.style.display = (x.style.display === "none" || x.style.display === "") ? "block" : "none";
+    }
+
+    function muatData() {
+      fetch(scriptURL)
+        .then(res => res.json())
+        .then(res => {
+          // --- Render Jadwal & Isi Dropdown ---
+          let hJadwal = '';
+          let opsiJadwal = '<option value="">-- Pilih Partai --</option>';
+          
+          if(res.jadwal && res.jadwal.length > 1) {
+            res.jadwal.slice(1).forEach(r => { 
+              if(!r[1]) return;
+              let skorTampil = (r[4] === "" && r[5] === "") ? "VS" : `${r[4]} - ${r[5]}`;
+              hJadwal += `
+              <div class="match-card">
+                <div class="match-info"><span>📅 ${r[1]}</span><span>🕒 ${r[2]} WIB</span></div>
+                <div class="match-teams">
+                  <div class="team-name">${r[3]}</div>
+                  <div class="score-box">${skorTampil}</div>
+                  <div class="team-name">${r[6]}</div>
+                </div>
+              </div>`;
+              // Masukkan ID (r[0]) dan Nama Partai ke dropdown admin
+              opsiJadwal += `<option value="${r[0]}">${r[3]} vs ${r[6]} (${r[1]})</option>`;
+            });
+          } else { hJadwal = "Belum ada jadwal."; }
+          
+          document.getElementById('jadwal-area').innerHTML = hJadwal;
+          document.getElementById('selJadwal').innerHTML = opsiJadwal;
+
+          // --- Render Klasemen (Grup A & B) ---
+          let hKlasA = '<span class="grup-label">🏆 GRUP A</span>';
+          let hKlasB = '<span class="grup-label">🏆 GRUP B</span>';
+          let isGrupB = false;
+
+          if(res.klasemen && res.klasemen.length > 1) {
+            res.klasemen.slice(1).forEach(r => {
+              if(r[0] === "NAMA RT") { isGrupB = true; return; }
+              if(!r[0] || r[0] === "") return;
+
+              let item = `
+              <div class="card">
+                <div>
+                  <b style="font-size:14px; text-transform:uppercase;">${r[0]}</b><br>
+                  <small style="color:#888">M:${r[1]} | MG:${r[2]} | K:${r[3]}</small>
+                </div>
+                <div class="pts-box">
+                  <span class="pts-val">${r[4]}</span>
+                  <small style="font-size:8px; color:#666">PTS</small>
+                </div>
+              </div>`;
+              
+              if(isGrupB) hKlasB += item;
+              else hKlasA += item;
+            });
+          }
+          document.getElementById('klasemen-area').innerHTML = hKlasA + hKlasB;
+        })
+        .catch(err => console.error("Error muat data:", err));
+    }
+
+    function simpanSkor() {
+      const idMatch = document.getElementById('selJadwal').value;
+      const skor1 = document.getElementById('s1').value;
+      const skor2 = document.getElementById('s2').value;
+      
+      if(!idMatch || skor1 === "" || skor2 === "") return alert("Pilih partai dan isi skornya dulu Pak!");
+
+      const btn = document.querySelector('.btn-save');
+      btn.innerHTML = "⌛ Sedang Mengirim...";
+      btn.disabled = true;
+
+      fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors', // Penting agar tidak kena blokir CORS
+        body: JSON.stringify({ id: idMatch, s1: skor1, s2: skor2 })
+      }).then(() => {
+        alert("✅ Berhasil! Skor masuk ke Google Sheets.");
+        btn.innerHTML = "UPDATE SKOR SEKARANG";
+        btn.disabled = false;
+        document.getElementById('s1').value = "";
+        document.getElementById('s2').value = "";
+        toggleAdmin(); // Tutup panel admin
+        setTimeout(muatData, 2000); // Segarkan tampilan setelah 2 detik
+      }).catch(err => {
+        alert("Gagal mengirim data!");
+        btn.disabled = false;
+        btn.innerHTML = "UPDATE SKOR SEKARANG";
+      });
+    }
+
+    // Jalankan saat halaman dibuka
+    window.onload = muatData;
+    // Auto refresh setiap 1 menit agar data tetap update
+    setInterval(muatData, 60000);
+  </script>
+</body>
+</html>
