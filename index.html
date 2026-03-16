@@ -3,165 +3,169 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KARANGTARUNA LEMBUH WULUNG RT CUP 2026  - UPDATE SKOR</title>
+  <title>RT CUP 2026 - DIGITAL BOARD</title>
   <style>
     :root { --red: #fe2c55; --bg: #0a0a0a; --card: #161616; --gold: #f1c40f; }
-    body { background: var(--bg); color: white; font-family: 'Segoe UI', Roboto, sans-serif; padding: 15px; margin: 0; }
-    
+    body { background: var(--bg); color: white; font-family: sans-serif; padding: 15px; margin: 0; }
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--red); padding-bottom: 10px; margin-bottom: 20px; }
-    .gir { font-size: 24px; cursor: pointer; opacity: 0.6; transition: 0.3s; }
-    .gir:hover { opacity: 1; transform: rotate(90deg); }
     
-    /* Panel Admin */
-    #admin-panel { display: none; background: #222; padding: 15px; border-radius: 10px; border: 1px solid var(--red); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(254, 44, 85, 0.2); }
-    select, input { width: 100%; padding: 12px; margin: 8px 0; background: #333; color: white; border: 1px solid #444; border-radius: 5px; box-sizing: border-box; }
-    .btn-save { width: 100%; padding: 15px; background: var(--red); color: white; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.2s; }
-    .btn-save:active { transform: scale(0.98); background: #d62548; }
+    /* Admin Panel */
+    #admin-panel { display: none; background: #222; padding: 15px; border-radius: 10px; border: 1px solid var(--red); margin-bottom: 20px; }
+    input, select { width: 100%; padding: 12px; margin: 8px 0; background: #333; color: white; border: 1px solid #444; border-radius: 5px; box-sizing: border-box; }
+    .btn-save { width: 100%; padding: 12px; background: var(--red); color: white; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 5px; }
 
-    .section-title { color: var(--gold); border-left: 4px solid var(--red); padding-left: 10px; margin: 25px 0 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+    .section-title { color: var(--gold); border-left: 4px solid var(--red); padding-left: 10px; margin: 25px 0 10px; font-weight: bold; text-transform: uppercase; font-size: 14px; }
     
-    /* Card Jadwal */
-    .match-card { background: var(--card); margin-bottom: 10px; padding: 12px; border-radius: 10px; border-left: 4px solid var(--red); box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-    .match-info { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-bottom: 8px; }
+    /* Match Card */
+    .match-card { background: var(--card); margin-bottom: 10px; padding: 12px; border-radius: 10px; border-left: 4px solid var(--red); }
     .match-teams { display: flex; justify-content: space-between; align-items: center; text-align: center; }
-    .team-name { flex: 1; font-weight: bold; font-size: 14px; text-transform: uppercase; }
-    .score-box { flex: 0.5; background: #222; padding: 5px; border-radius: 5px; margin: 0 10px; color: var(--red); font-weight: 900; font-size: 18px; border: 1px solid #333; }
+    .score-box { background: #222; padding: 5px 10px; border-radius: 5px; color: var(--red); font-weight: 900; font-size: 18px; border: 1px solid #333; }
 
-    /* Card Klasemen */
-    .card { background: var(--card); padding: 12px; margin-bottom: 8px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
-    .pts-box { text-align: center; background: rgba(254, 44, 85, 0.1); padding: 8px; border-radius: 8px; min-width: 45px; border: 1px solid var(--red); }
-    .pts-val { display: block; font-size: 18px; font-weight: bold; color: var(--red); }
-    .grup-label { color: var(--gold); font-weight: bold; margin: 20px 0 10px; border-bottom: 1px solid #333; padding-bottom: 5px; display: block; font-size: 14px; }
+    /* Klasemen Card */
+    .card { background: var(--card); padding: 10px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+    .pts-box { text-align: center; background: rgba(254, 44, 85, 0.1); padding: 5px; border-radius: 5px; min-width: 40px; border: 1px solid var(--red); color: var(--red); font-weight: bold; }
+    
+    /* Bagan Gugur */
+    .gugur-box { background: linear-gradient(45deg, #161616, #222); padding: 15px; border-radius: 10px; border: 1px solid var(--gold); text-align: center; margin-bottom: 10px; }
   </style>
 </head>
 <body>
 
   <div class="header">
     <h2 style="margin:0">🏆 RT CUP 2026</h2>
-    <div class="gir" onclick="toggleAdmin()">⚙️</div>
+    <div onclick="toggleAdmin()" style="cursor:pointer; font-size:20px;">⚙️</div>
   </div>
 
   <div id="admin-panel">
-    <h4 style="margin:0 0 10px 0; color:var(--red); text-align:center;">⚙️ INPUT SKOR PERTANDINGAN</h4>
-    <label style="font-size:11px; color:#888;">PILIH PARTAI:</label>
-    <select id="selJadwal">
-        <option value="">-- Memuat Jadwal... --</option>
-    </select>
-    <div style="display:flex; gap:10px;">
-        <input type="number" id="s1" placeholder="Skor Kiri">
-        <input type="number" id="s2" placeholder="Skor Kanan">
+    <div id="pass-area">
+        <input type="password" id="passInput" placeholder="Password Admin (Default: 1234)">
+        <button class="btn-save" onclick="cekPassword()">MASUK ADMIN</button>
     </div>
-    <button class="btn-save" onclick="simpanSkor()">UPDATE SKOR SEKARANG</button>
+    <div id="form-admin" style="display:none;">
+        <h4 style="margin:0; color:var(--red);">1. UPDATE SKOR JADWAL</h4>
+        <select id="selJadwal"></select>
+        <div style="display:flex; gap:5px;"><input type="number" id="s1" placeholder="Skor Kiri"><input type="number" id="s2" placeholder="Skor Kanan"></div>
+        <button class="btn-save" onclick="simpanSkor()">UPDATE SKOR</button>
+        
+        <hr style="border:0; border-top:1px solid #444; margin:15px 0;">
+        
+        <h4 style="margin:0; color:var(--gold);">2. SET BABAK GUGUR (MANUAL)</h4>
+        <select id="pilihBabak">
+            <option value="S1">SEMI FINAL 1</option>
+            <option value="S2">SEMI FINAL 2</option>
+            <option value="S3">FINAL 3/4 (JUARA 3)</option>
+            <option value="S4">FINAL 1/2 (GRAND FINAL)</option>
+        </select>
+        <input type="text" id="inputLawan" placeholder="Ketik: RT ... vs RT ...">
+        <input type="text" id="inputWaktu" placeholder="Ketik: Jam / Hari Pertandingan">
+        <button class="btn-save" style="background:var(--gold); color:black;" onclick="simpanGugur()">SIMPAN BAGAN</button>
+        <button onclick="toggleAdmin()" style="background:#444; width:100%; margin-top:10px; border:none; color:white; padding:8px; border-radius:5px;">TUTUP PANEL</button>
+    </div>
   </div>
 
-  <div class="section-title">📅 Jadwal Pertandingan</div>
-  <div id="jadwal-area">Memuat data dari Google Sheets...</div>
+  <div class="section-title">📅 JADWAL & HASIL</div>
+  <div id="jadwal-area">Memuat Jadwal...</div>
 
-  <div class="section-title">📊 Klasemen Sementara</div>
-  <div id="klasemen-area">Menghitung Klasemen...</div>
+  <div class="section-title">📊 KLASEMEN GRUP</div>
+  <div id="klasemen-area">Memuat Klasemen...</div>
+
+  <div class="section-title">🏆 BABAK GUGUR</div>
+  <div id="gugur-area">
+    <div style="display:flex; gap:10px;">
+        <div class="gugur-box" style="flex:1;">
+            <div style="font-size:10px; color:var(--gold);">SEMI FINAL 1</div>
+            <div id="txt-S1" style="font-size:11px; font-weight:bold; margin:5px 0;">-</div>
+            <div id="jam-S1" style="font-size:9px; color:#888;">-</div>
+        </div>
+        <div class="gugur-box" style="flex:1;">
+            <div style="font-size:10px; color:var(--gold);">SEMI FINAL 2</div>
+            <div id="txt-S2" style="font-size:11px; font-weight:bold; margin:5px 0;">-</div>
+            <div id="jam-S2" style="font-size:9px; color:#888;">-</div>
+        </div>
+    </div>
+    
+    <div class="gugur-box" style="border-color: #555;">
+        <div style="font-size:10px; color:#888;">PEREBUTAN JUARA 3</div>
+        <div id="txt-S3" style="font-size:13px; font-weight:bold; margin:5px 0;">-</div>
+        <div id="jam-S3" style="font-size:10px; color:#666;">-</div>
+    </div>
+
+    <div class="gugur-box" style="border-width:2px; border-color:var(--gold); background: rgba(241, 196, 15, 0.05);">
+        <div style="font-size:12px; color:var(--gold); font-weight:bold;">🏆 GRAND FINAL 🏆</div>
+        <div id="txt-S4" style="font-size:16px; font-weight:bold; margin:10px 0;">-</div>
+        <div id="jam-S4" style="font-size:11px; color:#888;">-</div>
+    </div>
+  </div>
 
   <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbw5LvIh68OtxWDfMdKJFd7U2k69ordkgYi5_oiX54P7OVw3UlytYSh6JpDWVApjn-Fw/exec';
+    const PASS = "1234";
 
     function toggleAdmin() {
-      var x = document.getElementById("admin-panel");
-      x.style.display = (x.style.display === "none" || x.style.display === "") ? "block" : "none";
+        var x = document.getElementById("admin-panel");
+        x.style.display = (x.style.display === "none" || x.style.display === "") ? "block" : "none";
+    }
+
+    function cekPassword() {
+        if(document.getElementById("passInput").value === PASS) {
+            document.getElementById("pass-area").style.display = "none";
+            document.getElementById("form-admin").style.display = "block";
+        } else { alert("Password Salah!"); }
     }
 
     function muatData() {
-      fetch(scriptURL)
-        .then(res => res.json())
-        .then(res => {
-          // --- Render Jadwal & Isi Dropdown ---
-          let hJadwal = '';
-          let opsiJadwal = '<option value="">-- Pilih Partai --</option>';
-          
-          if(res.jadwal && res.jadwal.length > 1) {
-            res.jadwal.slice(1).forEach(r => { 
-              if(!r[1]) return;
-              let skorTampil = (r[4] === "" && r[5] === "") ? "VS" : `${r[4]} - ${r[5]}`;
-              hJadwal += `
-              <div class="match-card">
-                <div class="match-info"><span>📅 ${r[1]}</span><span>🕒 ${r[2]} WIB</span></div>
-                <div class="match-teams">
-                  <div class="team-name">${r[3]}</div>
-                  <div class="score-box">${skorTampil}</div>
-                  <div class="team-name">${r[6]}</div>
-                </div>
-              </div>`;
-              // Masukkan ID (r[0]) dan Nama Partai ke dropdown admin
-              opsiJadwal += `<option value="${r[0]}">${r[3]} vs ${r[6]} (${r[1]})</option>`;
-            });
-          } else { hJadwal = "Belum ada jadwal."; }
-          
+      fetch(scriptURL).then(res => res.json()).then(res => {
+          // Render Jadwal
+          let hJadwal = ''; let opsi = '<option value="">-- Pilih Partai --</option>';
+          res.jadwal.slice(1).forEach(r => {
+            if(!r[1]) return;
+            let skor = (r[4] === "" && r[5] === "") ? "VS" : `${r[4]} - ${r[5]}`;
+            hJadwal += `<div class="match-card"><div style="font-size:10px; color:#888; margin-bottom:5px;">${r[1]} | ${r[2]}</div><div class="match-teams"><div style="flex:1; font-weight:bold; font-size:13px;">${r[3]}</div><div class="score-box">${skor}</div><div style="flex:1; font-weight:bold; font-size:13px;">${r[6]}</div></div></div>`;
+            opsi += `<option value="${r[0]}">${r[3]} vs ${r[6]}</option>`;
+          });
           document.getElementById('jadwal-area').innerHTML = hJadwal;
-          document.getElementById('selJadwal').innerHTML = opsiJadwal;
+          document.getElementById('selJadwal').innerHTML = opsi;
 
-          // --- Render Klasemen (Grup A & B) ---
-          let hKlasA = '<span class="grup-label">🏆 GRUP A</span>';
-          let hKlasB = '<span class="grup-label">🏆 GRUP B</span>';
-          let isGrupB = false;
-
-          if(res.klasemen && res.klasemen.length > 1) {
-            res.klasemen.slice(1).forEach(r => {
-              if(r[0] === "NAMA RT") { isGrupB = true; return; }
-              if(!r[0] || r[0] === "") return;
-
-              let item = `
-              <div class="card">
-                <div>
-                  <b style="font-size:14px; text-transform:uppercase;">${r[0]}</b><br>
-                  <small style="color:#888">M:${r[1]} | MG:${r[2]} | K:${r[3]}</small>
-                </div>
-                <div class="pts-box">
-                  <span class="pts-val">${r[4]}</span>
-                  <small style="font-size:8px; color:#666">PTS</small>
-                </div>
-              </div>`;
-              
-              if(isGrupB) hKlasB += item;
-              else hKlasA += item;
-            });
-          }
+          // Render Klasemen
+          let hKlasA = '<div style="color:var(--gold); font-size:11px; margin-bottom:5px;">--- GRUP A ---</div>';
+          let hKlasB = '<div style="color:var(--gold); font-size:11px; margin:15px 0 5px;">--- GRUP B ---</div>';
+          let isB = false;
+          res.klasemen.slice(1).forEach(r => {
+            if(r[0] === "NAMA RT") { isB = true; return; }
+            if(!r[0]) return;
+            let item = `<div class="card"><div><b style="font-size:13px;">${r[0]}</b><br><small style="color:#888">M:${r[1]} | MG:${r[2]} | K:${r[3]}</small></div><div class="pts-box">${r[4]} <small style="font-size:8px;">PTS</small></div></div>`;
+            if(isB) hKlasB += item; else hKlasA += item;
+          });
           document.getElementById('klasemen-area').innerHTML = hKlasA + hKlasB;
-        })
-        .catch(err => console.error("Error muat data:", err));
-    }
 
-    function simpanSkor() {
-      const idMatch = document.getElementById('selJadwal').value;
-      const skor1 = document.getElementById('s1').value;
-      const skor2 = document.getElementById('s2').value;
-      
-      if(!idMatch || skor1 === "" || skor2 === "") return alert("Pilih partai dan isi skornya dulu Pak!");
-
-      const btn = document.querySelector('.btn-save');
-      btn.innerHTML = "⌛ Sedang Mengirim...";
-      btn.disabled = true;
-
-      fetch(scriptURL, {
-        method: 'POST',
-        mode: 'no-cors', // Penting agar tidak kena blokir CORS
-        body: JSON.stringify({ id: idMatch, s1: skor1, s2: skor2 })
-      }).then(() => {
-        alert("✅ Berhasil! Skor masuk ke Google Sheets.");
-        btn.innerHTML = "UPDATE SKOR SEKARANG";
-        btn.disabled = false;
-        document.getElementById('s1').value = "";
-        document.getElementById('s2').value = "";
-        toggleAdmin(); // Tutup panel admin
-        setTimeout(muatData, 2000); // Segarkan tampilan setelah 2 detik
-      }).catch(err => {
-        alert("Gagal mengirim data!");
-        btn.disabled = false;
-        btn.innerHTML = "UPDATE SKOR SEKARANG";
+          // Render Gugur
+          if(res.gugur && res.gugur.length > 1) {
+            document.getElementById('txt-S1').innerText = res.gugur[1][2] || "-";
+            document.getElementById('jam-S1').innerText = res.gugur[1][3] || "-";
+            document.getElementById('txt-S2').innerText = res.gugur[2][2] || "-";
+            document.getElementById('jam-S2').innerText = res.gugur[2][3] || "-";
+            document.getElementById('txt-S3').innerText = res.gugur[3][2] || "-";
+            document.getElementById('jam-S3').innerText = res.gugur[3][3] || "-";
+            document.getElementById('txt-S4').innerText = res.gugur[4][2] || "-";
+            document.getElementById('jam-S4').innerText = res.gugur[4][3] || "-";
+          }
       });
     }
 
-    // Jalankan saat halaman dibuka
+    function simpanSkor() {
+        const data = { id: document.getElementById('selJadwal').value, s1: document.getElementById('s1').value, s2: document.getElementById('s2').value };
+        if(!data.id) return alert("Pilih partai dulu!");
+        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).then(() => { alert("Skor Berhasil Update!"); muatData(); });
+    }
+
+    function simpanGugur() {
+        const data = { tipe: "GUGUR", id: document.getElementById('pilihBabak').value, lawan: document.getElementById('inputLawan').value, waktu: document.getElementById('inputWaktu').value };
+        if(!data.lawan) return alert("Isi nama RT dulu!");
+        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).then(() => { alert("Bagan Berhasil Update!"); muatData(); });
+    }
+
     window.onload = muatData;
-    // Auto refresh setiap 1 menit agar data tetap update
-    setInterval(muatData, 60000);
+    setInterval(muatData, 60000); // Auto-refresh tiap 1 menit
   </script>
 </body>
 </html>
